@@ -10,6 +10,8 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+const Version = "0.1.0"
+
 var cnf config.Config = config.LoadConfig()
 
 func Authenticator() gin.HandlerFunc {
