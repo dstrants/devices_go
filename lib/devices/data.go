@@ -1,6 +1,13 @@
 package devices
 
-import "fmt"
+import (
+	"context"
+	"fmt"
+	"log"
+	"time"
+
+	db "devices/lib/mongo"
+)
 
 const (
 	LowBatteryDischarging      = "%s is running out of battery!"
@@ -16,6 +23,7 @@ type Device struct {
 	Level int    `json:"level"`
 	// True -> Charging || False -> Discharging
 	ChargingStatus bool `json:"status"`
+	Timestamp      time.Time
 }
 
 // Returns the device charging status in a string format
@@ -43,4 +51,26 @@ func (device Device) EventMessage() string {
 	default:
 		return fmt.Sprintf(DefaultStatus, device.Name)
 	}
+}
+
+func (device Device) AutoTimestamp() Device {
+	tz, err := time.LoadLocation("Europe/Athens")
+
+	if err != nil {
+		// TODO: Port this to logrus
+		log.Fatal(err)
+	}
+
+	device.Timestamp = time.Now().In(tz)
+	return device
+}
+
+// Saves current configuration to db
+func (device Device) Save() error {
+	ctx := context.Background()
+	collection := db.MongoCollection("battery")
+
+	_, err := collection.InsertOne(ctx, device)
+
+	return err
 }

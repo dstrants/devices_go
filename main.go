@@ -1,6 +1,7 @@
 package main
 
 import (
+	"log"
 	"net/http"
 
 	"devices/lib/devices"
@@ -22,6 +23,13 @@ func setupRouter() *gin.Engine {
 		if err := c.ShouldBindJSON(&device); err != nil {
 			c.JSON(http.StatusUnprocessableEntity, gin.H{"message": "Could not parse device status"})
 		}
+
+		err := device.AutoTimestamp().Save()
+
+		if err != nil {
+			log.Fatal(err)
+		}
+
 		c.JSON(http.StatusAccepted, gin.H{"device": device.Name, "status": device.EventMessage()})
 	})
 
