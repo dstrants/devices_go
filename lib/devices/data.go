@@ -7,6 +7,7 @@ import (
 	"time"
 
 	db "devices/lib/mongo"
+	notify "devices/lib/slack"
 )
 
 const (
@@ -38,7 +39,7 @@ func (device Device) Status() string {
 // Returns the device status in human readable message
 func (device Device) EventMessage() string {
 	switch {
-	case !device.ChargingStatus && device.Level < 20:
+	case !device.ChargingStatus && device.Level <= 20:
 		return fmt.Sprintf(LowBatteryDischarging, device.Name)
 	case device.ChargingStatus && device.Level < 100:
 		return fmt.Sprintf(LowBatteryCharging, device.Name)
@@ -73,4 +74,16 @@ func (device Device) Save() error {
 	_, err := collection.InsertOne(ctx, device)
 
 	return err
+}
+
+// Send slack notification for the given device status
+func (device Device) Notify() {
+	var msg string
+
+	if device.ChargingStatus {
+		msg = "🔌 " + device.EventMessage()
+	} else {
+		msg = "🔋 " + device.EventMessage()
+	}
+	notify.SendSimpleMessage(msg)
 }

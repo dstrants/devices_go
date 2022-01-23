@@ -51,6 +51,8 @@ func setupRouter() *gin.Engine {
 			c.JSON(http.StatusUnprocessableEntity, gin.H{"message": "Could not parse device status"})
 		}
 
+		// Send slack notification and save the data to mongo
+		device.Notify()
 		err := device.AutoTimestamp().Save()
 
 		if err != nil {
