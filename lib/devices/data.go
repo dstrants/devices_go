@@ -3,7 +3,6 @@ package devices
 import (
 	"context"
 	"fmt"
-	"log"
 	"time"
 
 	db "devices/lib/mongo"
@@ -54,15 +53,9 @@ func (device Device) EventMessage() string {
 	}
 }
 
+// Adds current timestamp to record
 func (device Device) AutoTimestamp() Device {
-	tz, err := time.LoadLocation("Europe/Athens")
-
-	if err != nil {
-		// TODO: Port this to logrus
-		log.Fatal(err)
-	}
-
-	device.Timestamp = time.Now().In(tz)
+	device.Timestamp = time.Now()
 	return device
 }
 
