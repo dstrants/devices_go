@@ -17,4 +17,6 @@ type Config struct {
 		Token   string `env:"SLACK_TOKEN,required=true"`
 		Channel string `env:"SLACK_CHANNEL,default=devices"`
 	}
+
+	Token string `env:"API_KEY,required=true"`
 }

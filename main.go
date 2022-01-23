@@ -4,10 +4,33 @@ import (
 	"log"
 	"net/http"
 
+	config "devices/lib/config"
 	"devices/lib/devices"
 
 	"github.com/gin-gonic/gin"
 )
+
+var cnf config.Config = config.LoadConfig()
+
+func Authenticator() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		headers := c.Request.Header
+		TokenHeader, ok := headers["Token"]
+
+		// If there is not Token header
+		if !ok {
+			c.AbortWithStatusJSON(http.StatusUnprocessableEntity, gin.H{"message": "UnprocessableEntity"})
+		}
+
+		// If the token exists and it is correct
+		if TokenHeader[0] == cnf.Token {
+			return
+		}
+
+		// If the token exists bit it is wrong
+		c.AbortWithStatusJSON(http.StatusForbidden, gin.H{"message": "Access Denied"})
+	}
+}
 
 func main() {
 	r := setupRouter()
@@ -17,6 +40,8 @@ func main() {
 func setupRouter() *gin.Engine {
 
 	r := gin.Default()
+
+	r.Use(Authenticator())
 
 	r.POST("devices/", func(c *gin.Context) {
 		var device devices.Device
