@@ -12,6 +12,7 @@ MONGO_DATABASE | `devices` | The database to be used by the tool
 SLACK_TOKEN | **required** | Slack application token to be used for the notification delivery
 SLACK_CHANNEL | `devices` | The slack channel to deliver the notification. Make sure the app is a member fo that channel
 API_KEY | **required** | Secret token used for authentication.
+BATTERY_THRESHOLD | `20` | The threshold for low battery
 
 ### iOS Shortcuts Configuration.
 
