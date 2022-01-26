@@ -12,7 +12,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-const Version = "0.1.2"
+const Version = "0.1.3"
 
 var cnf config.Config = config.LoadConfig()
 
