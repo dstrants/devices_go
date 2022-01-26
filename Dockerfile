@@ -1,6 +1,6 @@
 ARG GOLANG_VERSION=1.17
 FROM golang:${GOLANG_VERSION} AS builder
-LABEL version="0.1.1"
+LABEL version="0.1.2"
 LABEL org.opencontainers.image.description "A tiny tool to keep track of mobile devices battery"
 
 
