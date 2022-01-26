@@ -6,8 +6,12 @@ on:
   pull_request:
     branches: [ master ]
 
-jobs:
+env:
+  MONGO_CONNECTION_STRING: mongodb+srv://someuser:withstrongpassword@mongodb.test.com/devicedb?retryWrites=true&w=majority
+  SLACK_TOKEN: verysecretvalue
+  API_KEY: thisissecretaswell
 
+jobs:
   build:
     runs-on: ubuntu-latest
     steps:
