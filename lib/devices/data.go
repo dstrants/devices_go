@@ -62,15 +62,19 @@ func (device Device) AutoTimestamp() Device {
 // Saves current configuration to db
 func (device Device) Save() error {
 	ctx := context.Background()
-	collection := db.MongoCollection("battery")
+	collection, err := db.MongoCollection("battery")
 
-	_, err := collection.InsertOne(ctx, device)
+	if err != nil {
+		return err
+	}
+
+	_, err = collection.InsertOne(ctx, device)
 
 	return err
 }
 
 // Send slack notification for the given device status
-func (device Device) Notify() {
+func (device Device) Notify() error {
 	var msg string
 
 	if device.ChargingStatus {
@@ -78,5 +82,7 @@ func (device Device) Notify() {
 	} else {
 		msg = "🔋 " + device.EventMessage()
 	}
-	notify.SendSimpleMessage(msg)
+	err := notify.SendSimpleMessage(msg)
+
+	return err
 }

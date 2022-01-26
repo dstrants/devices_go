@@ -1,8 +1,6 @@
 package slack
 
 import (
-	"fmt"
-
 	"github.com/slack-go/slack"
 
 	config "devices/lib/config"
@@ -11,18 +9,13 @@ import (
 var cnf config.Config = config.LoadConfig()
 
 // Sends a slack plain text message
-func SendSimpleMessage(msg string) {
+func SendSimpleMessage(msg string) error {
 	api := slack.New(cnf.Slack.Token)
 
-	channelID, timestamp, err := api.PostMessage(
+	_, _, err := api.PostMessage(
 		cnf.Slack.Channel,
 		slack.MsgOptionText(msg, false),
 		slack.MsgOptionAsUser(true),
 	)
-	if err != nil {
-		// TODO: port this to logrus
-		fmt.Printf("%s\n", err)
-		return
-	}
-	fmt.Printf("Message successfully sent to channel %s at %s", channelID, timestamp)
+	return err
 }
