@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"time"
 
+	"devices/lib/config"
 	db "devices/lib/mongo"
 	notify "devices/lib/slack"
 )
@@ -17,6 +18,8 @@ const (
 	ChargerRemovedFullyCharged = "%s has been plugged out after a full charge"
 	DefaultStatus              = "Status cannot be defined for device %s"
 )
+
+var cnf config.Config = config.LoadConfig()
 
 type Device struct {
 	Name  string `json:"name"`
@@ -38,7 +41,7 @@ func (device Device) Status() string {
 // Returns the device status in human readable message
 func (device Device) EventMessage() string {
 	switch {
-	case !device.ChargingStatus && device.Level <= 20:
+	case !device.ChargingStatus && device.Level <= cnf.LowBatteryThreshold:
 		return fmt.Sprintf(LowBatteryDischarging, device.Name)
 	case device.ChargingStatus && device.Level < 100:
 		return fmt.Sprintf(LowBatteryCharging, device.Name)

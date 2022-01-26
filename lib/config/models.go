@@ -18,5 +18,7 @@ type Config struct {
 		Channel string `env:"SLACK_CHANNEL,default=devices"`
 	}
 
+	LowBatteryThreshold int `env:"BATTERY_THRESHOLD,default=20"`
+
 	Token string `env:"API_KEY,required=true"`
 }
