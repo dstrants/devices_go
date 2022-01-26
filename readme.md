@@ -6,6 +6,7 @@ This is a simple to get notified about battery related events on iOS devices usi
 ## Environment Configuration
 
 Variable | Default | Description
+---------|---------|-------------
 MONGO_CONNECTION_STRING | **required** | The connection string to the mongo database. Used for caching requests.
 MONGO_DATABASE | `devices` | The database to be used by the tool
 SLACK_TOKEN | **required** | Slack application token to be used for the notification delivery
