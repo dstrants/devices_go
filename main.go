@@ -47,6 +47,10 @@ func Authenticator() gin.HandlerFunc {
 }
 
 func main() {
+	if gin.Mode() == "release" {
+		log.SetFormatter(&log.JSONFormatter{})
+		log.Info("Logging set to json")
+	}
 
 	r := setupRouter()
 	r.Run()
